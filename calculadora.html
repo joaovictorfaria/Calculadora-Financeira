@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Simulador Financeiro - WineCare</title>
 </head>
 
 <body>
@@ -53,53 +53,41 @@
         var qtdSensores = Number(ipt_qtdSensores.value);
         var contrato = Number(ipt_contrato.value);
 
-        var precoBarril50 = 270;
-        var precoBarril100 = 325;
-        var precoBarril225 = 731.25;
+        var precoBarril50 = 270; // Dados encontrados no site "https://vinhodofrade.com.br/website/tabela_frade2.htm"
+        var precoBarril100 = 325; //Dados encontrados no site "https://vinhodofrade.com.br/website/tabela_frade2.htm"
 
-        var valorSensor = 15;
-        var valorMensal = 3000;
-        var precoPerdaBarril225 = qtdPerdaBarril * precoBarril225;
-        var precoPerdaBarril100 = qtdPerdaBarril * precoBarril100;
-        var precoPerdaBarril50 = qtdPerdaBarril * precoBarril50;
-        var valorTotalSensor = valorSensor * qtdSensores;
-        var valorTotalContrato = valorMensal * contrato;
-        var valorCobrado = valorTotalSensor + valorTotalContrato;
+        var precoBarril225 = 731.25; // Preço do barril de 100L * 2 = 650 / 200L (Dois barris de 100L) = 3.25 * 25 (Litros que faltam para completar 225L) 
+        // = 81.25 + 650 = 731.25
+
+        var valorSensor = 15; // Valor cobrado por cada sensor (Pesquisas de mercado mostram que este valor se encontra entre R$12,00 e 17,00);
+        var valorMensal = 3000; //Valor de instalação + manutenção dos sensores + tecnologias que oferecemos (dashboard, gestão de processos, etc).
+
+        var precoPerdaBarril225 = qtdPerdaBarril * precoBarril225 * contrato; // Preço da perda do barril de 225L por mês.
+        var precoPerdaBarril100 = qtdPerdaBarril * precoBarril100 * contrato; // Preço da perda do barril de 100L por mês.
+        var precoPerdaBarril50 = qtdPerdaBarril * precoBarril50 * contrato; // Preço da perda do barril de 50L por mês.
+
+        var valorTotalSensor = valorSensor * qtdSensores; // Valor total dos sensores pedidos pelo cliente.
+        var valorTotalContrato = valorMensal * contrato; // Valor total do contrato, de acordo com o tempo que o cliente decidiu ficar conosco.
+        var valorCobrado = valorTotalSensor + valorTotalContrato; // Valor que é cobrado da nossa parte para o bom andamento da parceria.
+
+        var prejuizoParceria225 = (precoPerdaBarril225 * 0.2) + valorTotalContrato + valorTotalSensor; // Prejuízo do nosso cliente após a parceria, assumindo que os barris dele sejam de 225L. Esperamos uma redução de ao menos 80% das perdas do cliente. Este valor inclui o valor do contrato e dos sensores.
+
+        var prejuizoParceria100 = (precoPerdaBarril100 * 0.2) + valorTotalContrato + valorTotalSensor; // Prejuízo do nosso cliente após a parceria, assumindo que os barris dele sejam de 100L. Esperamos uma redução de ao menos 80% das perdas do cliente. Este valor inclui o valor do contrato e dos sensores.
+
+        var prejuizoParceria50 = (precoPerdaBarril50 * 0.2) + valorTotalContrato + valorTotalSensor; // Prejuízo do nosso cliente após a parceria, assumindo que os barris dele sejam de 50L. Esperamos uma redução de ao menos 80% das perdas do cliente. Este valor inclui o valor do contrato e dos sensores.
 
 
-        var porcentagemPerda = qtdPerdaBarril / qtdBarril;
-
-
-        var ganhosLiquidos225 = (precoBarril225 * qtdBarril);
-        var ganhosLiquidos100 = (precoBarril100 * qtdBarril);
-        var ganhosLiquidos50 = (precoBarril50 * qtdBarril);
-
-        var prejuizo225 = ganhosLiquidos225 - precoPerdaBarril225 - valorCobrado;
-        var prejuizo100 = ganhosLiquidos100 - precoPerdaBarril100 - valorCobrado;
-        var prejuizo50 = ganhosLiquidos50 - precoPerdaBarril100 - valorCobrado;
-
-        var lucro225 = ganhosLiquidos225 - prejuizo225;
-        var lucro100 = ganhosLiquidos100 - prejuizo100;
-        var lucro50 = ganhosLiquidos50 - prejuizo50;
-
-        var prejuizoParceria225 = lucro225 - prejuizo225;
-        var prejuizoParceria100 = lucro100 - prejuizo100;
-        var prejuizoParceria50 = lucro50 - prejuizo50;
-
-        var valorBarril225Perda = (qtdBarril * precoBarril225 + contrato) * porcentagemPerda;
-        var valorBarril100Perda = (qtdBarril * precoBarril100 + contrato) * porcentagemPerda;
-        var valorBarril50Perda = (qtdBarril * precoBarril50 + contrato) * porcentagemPerda;
 
         if (qtdLitroBarril == 225) {
-            mensagem.innerHTML = `Segundo nossas projeções, você têm um prejuízo de R$${prejuizo225},00 em ${contrato} mês(es). Utilizando nossa tecnologia, você passa a perder somente R$${prejuizoParceria225},00`;
+            mensagem.innerHTML = `Segundo nossas projeções, você têm um prejuízo de R$${precoPerdaBarril225},00 em ${contrato} mês(es). Utilizando nossa tecnologia, você passa a perder somente R$${prejuizoParceria225},00. <br> (Incluso valor do contrato).`;
         }
 
         if (qtdLitroBarril == 100) {
-            mensagem.innerHTML = `Segundo nossas projeções, você têm um prejuízo de R$${prejuizo100},00 em ${contrato} mês(es). Utilizando nossa tecnologia, você passa a perder somente R$${prejuizoParceria100},00`;
+            mensagem.innerHTML = `Segundo nossas projeções, você têm um prejuízo de R$${precoPerdaBarril100},00 em ${contrato} mês(es). Utilizando nossa tecnologia, você passa a perder somente R$${prejuizoParceria100},00. <br> (Incluso valor do contrato).`;
         }
 
         if (qtdLitroBarril == 50) {
-            mensagem.innerHTML = `Segundo nossas projeções, você têm um prejuízo de R$${prejuizo50},00 em ${contrato} mês(es). Utilizando nossa tecnologia, você passa a perder somente R$${prejuizoParceria50},00`;
+            mensagem.innerHTML = `Segundo nossas projeções, você têm um prejuízo de R$${precoPerdaBarril50},00 em ${contrato} mês(es). Utilizando nossa tecnologia, você passa a perder somente R$${prejuizoParceria50},00. <br> (Incluso valor do contrato).`;
         }
 
     }
